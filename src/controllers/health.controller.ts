@@ -1,29 +1,14 @@
 import { Request, Response } from 'express';
-import { prisma } from '../config/prisma';
+import { HealthService } from '../services';
+import { HTTP_STATUS } from '../lib/httpStatus';
 
-export const healthCheck = async (req: Request, res: Response): Promise<void> => {
-  try {
-    // Check DB connectivity
-    await prisma.$queryRaw`SELECT 1`;
+export const healthCheck = async (_req: Request, res: Response): Promise<void> => {
+  const health = await HealthService.getHealthStatus();
 
-    res.status(200).json({
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-      environment: process.env.NODE_ENV,
-      services: {
-        database: 'connected',
-        api: 'running',
-      },
-    });
-  } catch {
-    res.status(503).json({
-      status: 'error',
-      timestamp: new Date().toISOString(),
-      services: {
-        database: 'disconnected',
-        api: 'running',
-      },
-    });
-  }
+  const statusCode =
+    health.status === 'ok'
+      ? HTTP_STATUS.OK
+      : HTTP_STATUS.SERVICE_UNAVAILABLE;
+
+  res.status(statusCode).json(health);
 };
