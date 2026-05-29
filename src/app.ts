@@ -2,30 +2,30 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { healthRouter } from './routes/health.routes';
+import { apiRouter } from './routes';
 import { errorHandler } from './middlewares/errorHandler';
 import { notFound } from './middlewares/notFound';
+import { env } from './config/env';
+import { API_PREFIX } from './constants';
 
 const app: Application = express();
 
-// Security
 app.use(helmet());
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
-  credentials: true,
-}));
 
-// Logging
-app.use(morgan('combined'));
+app.use(
+  cors({
+    origin: env.corsOrigin,
+    credentials: true,
+  })
+);
 
-// Body parsing
+app.use(morgan(env.isProduction ? 'combined' : 'dev'));
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use('/api', healthRouter);
+app.use(API_PREFIX, apiRouter);
 
-// Error handling (must be last)
 app.use(notFound);
 app.use(errorHandler);
 
