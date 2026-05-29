@@ -1,27 +1,34 @@
 import { PrismaClient } from '@prisma/client';
 import { logger } from './logger';
+import { env } from './env';
 
 declare global {
-  // eslint-disable-next-line no-var
   var __prisma: PrismaClient | undefined;
 }
 
 export const prisma: PrismaClient =
   global.__prisma ||
   new PrismaClient({
-    log: [
-      { emit: 'event', level: 'query' },
-      { emit: 'stdout', level: 'error' },
-      { emit: 'stdout', level: 'warn' },
-    ],
+    datasources: {
+      db: {
+        url: env.databaseUrl,
+      },
+    },
+    log: env.isDevelopment
+      ? [
+          { emit: 'event', level: 'query' },
+          { emit: 'stdout', level: 'error' },
+          { emit: 'stdout', level: 'warn' },
+        ]
+      : [{ emit: 'stdout', level: 'error' }],
   });
 
-if (process.env.NODE_ENV !== 'production') {
+if (!env.isProduction) {
   global.__prisma = prisma;
 }
 
-prisma.$on('query' as never, (e: { query: string; duration: number }) => {
-  if (process.env.NODE_ENV === 'development') {
-    logger.debug(`Query: ${e.query} — ${e.duration}ms`);
-  }
-});
+if (env.isDevelopment) {
+  prisma.$on('query' as never, (e: { query: string; duration: number }) => {
+    logger.debug(`Query: ${e.query} -- ${e.duration}ms`);
+  });
+}
