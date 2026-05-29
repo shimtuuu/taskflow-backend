@@ -1,8 +1,8 @@
-# 🚀 TaskFlow Backend
+# TaskFlow Backend
 
 Backend для системы управления задачами **TaskFlow** — Node.js + Express + TypeScript + PostgreSQL (Prisma)
 
-## 📦 Технологии
+## Технологии
 
 - **Runtime:** Node.js
 - **Framework:** Express.js
@@ -13,7 +13,7 @@ Backend для системы управления задачами **TaskFlow**
 - **WebSocket:** Socket.IO
 - **Logger:** Winston
 
-## 🗂 Структура проекта
+## Структура проекта
 
 ```
 src/
@@ -31,7 +31,7 @@ prisma/
 logs/               # Лог-файлы
 ```
 
-## 🚀 Запуск
+## Запуск
 
 ```bash
 # 1. Клонировать репозиторий
@@ -55,20 +55,20 @@ npx prisma generate
 npm run dev
 ```
 
-## 🔍 API Endpoints
+## API Endpoints
 
 См. [API_CONTRACT.md](./API_CONTRACT.md) для полного описания всех эндпоинтов.
 
 ### День 1 — доступно сейчас:
 - `GET /api/health` — проверка здоровья сервера и БД
 
-## 🧪 Проверка работы
+## Проверка работы
 
 ```bash
 curl http://localhost:3000/api/health
 ```
 
-**Ожидаемый ответ:**
+Ожидаемый ответ:
 ```json
 {
   "status": "ok",
@@ -80,9 +80,9 @@ curl http://localhost:3000/api/health
 }
 ```
 
-## 📅 Roadmap
+## Roadmap
 
-- **День 1** ✅ Инициализация, структура, health check, схема users
+- **День 1** - Инициализация, структура, health check, схема users
 - **День 2** — Подключение БД, миграции
 - **День 3** — JWT авторизация, регистрация/логин
 - **День 4** — CRUD проектов
@@ -90,6 +90,6 @@ curl http://localhost:3000/api/health
 - **День 11** — WebSocket уведомления
 - **День 14** — API статистики
 
-## 👥 Команда
+## Команда
 
 TaskFlow Team — Backend Group (10 developers)
